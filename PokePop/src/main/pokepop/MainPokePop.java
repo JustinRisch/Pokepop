@@ -22,6 +22,7 @@ public class MainPokePop {
 		Instant timeExpires = Instant.now().plusMillis(expires);
 		String stringDate = df.format(Date.from(timeExpires));
 		String message = pokemon.getPokemonId().name() + " EXPIRES: " + stringDate;
+		// TODO get hipchat to also recieve this message.
 		System.out.println(message);
 		reportedAlready.add(pokemon);
 	}
