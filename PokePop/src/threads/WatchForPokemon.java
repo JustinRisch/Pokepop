@@ -11,7 +11,7 @@ import com.pokegoapi.api.map.pokemon.CatchablePokemon;
 import pokepop.PokePop;
 import resources.IgnoreList;
 
-public class WatchForPokemon extends Thread {
+public class WatchForPokemon {
 	static List<CatchablePokemon> reportedAlready = new ArrayList<>();
 	static SimpleDateFormat df = new SimpleDateFormat("hh:mm");
 
@@ -33,16 +33,12 @@ public class WatchForPokemon extends Thread {
 		return !reportedAlready.contains(pokemon);
 	}
 
-	@Override
-	public void run() {
-		while (true) {
-			try {
-				PokePop.go.getMap().getCatchablePokemon().stream().filter(IgnoreList::filterOut)
-						.filter(WatchForPokemon::haventNotifiedYet).forEach(WatchForPokemon::notifyHipchat);
-				Thread.sleep(10000);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+	public static void lookForPokemon() {
+		try {
+			PokePop.go.getMap().getCatchablePokemon().stream().filter(IgnoreList::filterOut)
+					.filter(WatchForPokemon::haventNotifiedYet).forEach(WatchForPokemon::notifyHipchat);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 }

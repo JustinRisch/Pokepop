@@ -18,6 +18,9 @@ import threads.WatchNearbyGymStatus;
 public class PokePop {
 	static HipChat hc = new HipChat(HipchatProp.getApiKey(), HipchatProp.getBaseUrl());
 	static RoomsAPI rooms = hc.roomsAPI();
+	static {
+		System.out.println(HipchatProp.getRoomName() + " " + HipchatProp.getBaseUrl() + HipchatProp.getApiKey());
+	}
 	public static PokemonGo go;
 
 	public static boolean login(PokeProp prop) throws InterruptedException {
@@ -32,8 +35,10 @@ public class PokePop {
 		}
 	}
 
+	// TODO fix
 	public static void updateRoomStatus(String status) {
 		try {
+			System.out.println("Setting Topic: " + status);
 			SetTopic topic = new SetTopic(HipchatProp.getRoomName(), status);
 			rooms.setTopic(topic);
 		} catch (APIException e) {
@@ -58,14 +63,17 @@ public class PokePop {
 				Attempts++;
 				System.err.println("Login Failed, Retrying.");
 				// less likely to get banned this way.
-				Thread.sleep(10000 * Attempts);
+				Thread.sleep(1000 * Attempts);
 			}
 			System.out.println("Logged in as: " + go.getPlayerProfile().getUsername());
 			go.setLatitude(prop.getLat());
 			go.setLongitude(prop.getLng());
 			System.out.println("Currently located at: " + go.getLatitude() + " " + go.getLongitude());
-			new WatchForPokemon().start();
-			new WatchNearbyGymStatus().start();
+			while (true) {
+				WatchForPokemon.lookForPokemon();
+				WatchNearbyGymStatus.checkGymStatus();
+				Thread.sleep(10000);
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
