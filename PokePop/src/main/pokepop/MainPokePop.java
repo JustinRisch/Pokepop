@@ -11,20 +11,30 @@ import com.pokegoapi.api.map.pokemon.CatchablePokemon;
 import com.pokegoapi.auth.PtcLogin;
 
 import POGOProtos.Networking.Envelopes.RequestEnvelopeOuterClass.RequestEnvelope.AuthInfo;
+import ch.viascom.hipchat.api.HipChat;
+import ch.viascom.hipchat.api.api.RoomsAPI;
+import ch.viascom.hipchat.api.request.models.SendMessage;
 import okhttp3.OkHttpClient;
 
 public class MainPokePop {
 	static List<CatchablePokemon> reportedAlready = new ArrayList<>();
 	static SimpleDateFormat df = new SimpleDateFormat("hh:mm");
+	static HipChat hc = new HipChat("1JyQK24FOvCcR4na5HXTZ0kjdbMxUjVqqGCOm2tN", "https://ipponusa.hipchat.com/v2/room/2968214/notification?auth_token=");
 
 	private static void notifyHipchat(CatchablePokemon pokemon) {
-		long expires = (pokemon.getExpirationTimestampMs() - Instant.now().toEpochMilli());
-		Instant timeExpires = Instant.now().plusMillis(expires);
-		String stringDate = df.format(Date.from(timeExpires));
-		String message = pokemon.getPokemonId().name() + " EXPIRES: " + stringDate;
-		// TODO get hipchat to also receive this message.
-		System.out.println(message);
-		reportedAlready.add(pokemon);
+		try {
+			long expires = (pokemon.getExpirationTimestampMs() - Instant.now().toEpochMilli());
+			Instant timeExpires = Instant.now().plusMillis(expires);
+			String stringDate = df.format(Date.from(timeExpires));
+			String message = pokemon.getPokemonId().name() + " EXPIRES: " + stringDate;
+			System.out.println(message);
+			RoomsAPI rooms = hc.roomsAPI();
+			SendMessage sendMessage = new SendMessage("PokePop", message);
+			rooms.sendRoomMessage(sendMessage);
+			reportedAlready.add(pokemon);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	private static boolean haventNotifiedYet(CatchablePokemon pokemon) {
