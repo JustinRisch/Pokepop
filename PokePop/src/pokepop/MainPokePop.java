@@ -61,10 +61,12 @@ public class MainPokePop {
 	public static void main(String[] args) {
 		try {
 			PokeProp prop = new PokeProp("PokePop.properties");
-			
+			int Attempts=0;
 			while (!login(prop)) {
+				Attempts++;
 				System.err.println("Login Failed, Retrying.");
-				Thread.sleep(10000);
+				//less likely to get banned this way.
+				Thread.sleep(10000*Attempts);
 			}
 			System.out.println("Logged in as: " + go.getPlayerProfile().getUsername());
 			go.setLatitude(prop.getLat());
