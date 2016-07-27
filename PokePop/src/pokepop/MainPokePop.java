@@ -1,4 +1,4 @@
-package main.pokepop;
+package pokepop;
 
 import java.text.SimpleDateFormat;
 import java.time.Instant;
@@ -15,6 +15,8 @@ import ch.viascom.hipchat.api.HipChat;
 import ch.viascom.hipchat.api.api.RoomsAPI;
 import ch.viascom.hipchat.api.request.models.SendMessage;
 import okhttp3.OkHttpClient;
+import resources.IgnoreList;
+import resources.PokeProp;
 
 public class MainPokePop {
 	static List<CatchablePokemon> reportedAlready = new ArrayList<>();
@@ -46,11 +48,11 @@ public class MainPokePop {
 		try {
 			OkHttpClient httpClient = new OkHttpClient();
 			PokeProp prop = new PokeProp("PokePop.properties");
-			AuthInfo auth = new PtcLogin(httpClient).login(prop.username, prop.password);
+			AuthInfo auth = new PtcLogin(httpClient).login(prop.getUsername(), prop.getPassword());
 			PokemonGo go = new PokemonGo(auth, httpClient);
 			System.out.println("Logged in as: " + go.getPlayerProfile().getUsername());
-			go.setLatitude(prop.lat);
-			go.setLongitude(prop.lng);
+			go.setLatitude(prop.getLat());
+			go.setLongitude(prop.getLng());
 			System.out.println("Currently located at: " + go.getLatitude() + " " + go.getLongitude());
 			while (true) {
 				go.getMap().getCatchablePokemon().stream().filter(IgnoreList::filterOut)
