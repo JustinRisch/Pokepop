@@ -19,7 +19,9 @@ import okhttp3.OkHttpClient;
 public class MainPokePop {
 	static List<CatchablePokemon> reportedAlready = new ArrayList<>();
 	static SimpleDateFormat df = new SimpleDateFormat("hh:mm");
-	static HipChat hc = new HipChat("1JyQK24FOvCcR4na5HXTZ0kjdbMxUjVqqGCOm2tN", "https://ipponusa.hipchat.com/v2/room/2968214/notification?auth_token=");
+	static HipChat hc = new HipChat("1JyQK24FOvCcR4na5HXTZ0kjdbMxUjVqqGCOm2tN",
+			"https://ipponusa.hipchat.com/v2/room/2968214/notification?auth_token=");
+	static RoomsAPI rooms = hc.roomsAPI();
 
 	private static void notifyHipchat(CatchablePokemon pokemon) {
 		try {
@@ -28,7 +30,6 @@ public class MainPokePop {
 			String stringDate = df.format(Date.from(timeExpires));
 			String message = pokemon.getPokemonId().name() + " EXPIRES: " + stringDate;
 			System.out.println(message);
-			RoomsAPI rooms = hc.roomsAPI();
 			SendMessage sendMessage = new SendMessage("PokePop", message);
 			rooms.sendRoomMessage(sendMessage);
 			reportedAlready.add(pokemon);
