@@ -53,8 +53,8 @@ public class MainPokePop {
 			go.setLongitude(prop.lng);
 			System.out.println("Currently located at: " + go.getLatitude() + " " + go.getLongitude());
 			while (true) {
-				go.getMap().getCatchablePokemon().stream().filter(MainPokePop::haventNotifiedYet)
-						.forEach(MainPokePop::notifyHipchat);
+				go.getMap().getCatchablePokemon().stream().filter(IgnoreList::filterOut)
+						.filter(MainPokePop::haventNotifiedYet).forEach(MainPokePop::notifyHipchat);
 				Thread.sleep(10000);
 			}
 		} catch (Exception e) {
