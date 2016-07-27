@@ -10,7 +10,7 @@ import com.pokegoapi.api.map.pokemon.CatchablePokemon;
 import POGOProtos.Enums.PokemonIdOuterClass.PokemonId;
 
 public class IgnoreList {
-	static List<String> ignored;
+	private static List<String> ignored;
 	static {
 		try {
 			ignored = Files.readAllLines(new File("ignore.list").toPath());
@@ -25,8 +25,9 @@ public class IgnoreList {
 			return false;
 		PokemonId id = pokemon.getPokemonId();
 		for (String i : ignored)
-			if (i.equalsIgnoreCase(id.name()))
+			if (i.equalsIgnoreCase(id.name())) {
 				return false;
+			}
 		return true;
 	}
 
