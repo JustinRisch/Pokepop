@@ -9,8 +9,16 @@ public class PokeProp {
 	private Double lat;
 	private Double lng;
 
-	public PokeProp(String fileName) throws IOException {
-		List<String> lines = ResourceLoader.getResource(fileName);
+	/*
+	 * In the resource folder, you must create a "PokePop.properties" which
+	 * includes, on separate lines, your: 
+	 * 	1. PTC Username 
+	 * 	2. PTC Password 
+	 * 	3. Latitude 
+	 * 	4. Longitude
+	 */
+	public PokeProp() throws IOException {
+		List<String> lines = ResourceLoader.getResource("PokePop.properties");
 		setUsername(lines.get(0));
 		setPassword(lines.get(1));
 		setLat(Double.parseDouble(lines.get(2)));
