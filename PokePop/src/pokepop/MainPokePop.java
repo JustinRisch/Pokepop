@@ -44,13 +44,28 @@ public class MainPokePop {
 		return !reportedAlready.contains(pokemon);
 	}
 
+	private static PokemonGo go;
+
+	public static boolean login(PokeProp prop) throws InterruptedException {
+		try {
+			OkHttpClient httpClient = new OkHttpClient();
+			AuthInfo auth = new PtcLogin(httpClient).login(prop.getUsername(), prop.getPassword());
+			go = new PokemonGo(auth, httpClient);
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+
 	public static void main(String[] args) {
 		try {
 			PokeProp prop = new PokeProp("PokePop.properties");
-			System.out.println("Attempting login as: " + prop.getUsername() + "," + prop.getPassword());
-			OkHttpClient httpClient = new OkHttpClient();
-			AuthInfo auth = new PtcLogin(httpClient).login(prop.getUsername(), prop.getPassword());
-			PokemonGo go = new PokemonGo(auth, httpClient);
+			
+			while (!login(prop)) {
+				System.err.println("Login Failed, Retrying.");
+				Thread.sleep(10000);
+			}
 			System.out.println("Logged in as: " + go.getPlayerProfile().getUsername());
 			go.setLatitude(prop.getLat());
 			go.setLongitude(prop.getLng());
