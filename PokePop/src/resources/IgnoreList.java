@@ -1,8 +1,5 @@
 package resources;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
 import java.util.List;
 
 import com.pokegoapi.api.map.pokemon.CatchablePokemon;
@@ -12,12 +9,8 @@ import POGOProtos.Enums.PokemonIdOuterClass.PokemonId;
 public class IgnoreList {
 	private static List<String> ignored;
 	static {
-		try {
-			ignored = Files.readAllLines(new File("ignore.list").toPath());
-			System.out.println("Ignoring: " + ignored.toString());
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		ignored = ResourceLoader.getResource("ignore.list");
+		System.out.println("Ignoring: " + ignored.toString());
 	}
 
 	public static boolean filterOut(CatchablePokemon pokemon) {

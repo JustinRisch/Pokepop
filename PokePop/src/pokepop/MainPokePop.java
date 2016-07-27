@@ -46,8 +46,9 @@ public class MainPokePop {
 
 	public static void main(String[] args) {
 		try {
-			OkHttpClient httpClient = new OkHttpClient();
 			PokeProp prop = new PokeProp("PokePop.properties");
+			System.out.println("Attempting login as: " + prop.getUsername() + "," + prop.getPassword());
+			OkHttpClient httpClient = new OkHttpClient();
 			AuthInfo auth = new PtcLogin(httpClient).login(prop.getUsername(), prop.getPassword());
 			PokemonGo go = new PokemonGo(auth, httpClient);
 			System.out.println("Logged in as: " + go.getPlayerProfile().getUsername());
