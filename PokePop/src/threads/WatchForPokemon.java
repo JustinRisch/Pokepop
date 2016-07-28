@@ -22,7 +22,7 @@ public class WatchForPokemon {
 			String stringDate = df.format(Date.from(timeExpires));
 			String message = pokemon.getPokemonId().name() + " EXPIRES: " + stringDate;
 			System.out.println(message);
-			PokePop.sendMessageToHipchat(message);
+			PokePop.sendMessageToHipchat("@here " + message);
 			reportedAlready.add(pokemon);
 		} catch (Exception e) {
 			e.printStackTrace();
