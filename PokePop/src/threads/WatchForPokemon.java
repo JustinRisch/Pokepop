@@ -15,6 +15,19 @@ public class WatchForPokemon {
 	static List<CatchablePokemon> reportedAlready = new ArrayList<>();
 	static SimpleDateFormat df = new SimpleDateFormat("hh:mm");
 
+	private static String padNumber(String p) {
+		if (p.length() > 2)
+			return p;
+		else
+			return '0' + p;
+	}
+
+	private static String emote(CatchablePokemon p) {
+
+		return "(" + padNumber(p.getPokemonId().getNumber() + "") + p.getPokemonId().name().toLowerCase() + ")";
+
+	}
+
 	private static void notifyHipchat(CatchablePokemon pokemon) {
 		try {
 			long expires = (pokemon.getExpirationTimestampMs() - Instant.now().toEpochMilli());
@@ -22,7 +35,8 @@ public class WatchForPokemon {
 			String stringDate = df.format(Date.from(timeExpires));
 			String message = pokemon.getPokemonId().name() + " EXPIRES: " + stringDate;
 			System.out.println(message);
-			PokePop.sendMessageToHipchat("@here " + message);
+			PokePop.sendMessageToHipchat("@here " + emote(pokemon) + " " + message);
+
 			reportedAlready.add(pokemon);
 		} catch (Exception e) {
 			e.printStackTrace();

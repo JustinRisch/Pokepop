@@ -1,9 +1,8 @@
 package pokepop;
 
 import com.pokegoapi.api.PokemonGo;
-import com.pokegoapi.auth.PtcLogin;
+import com.pokegoapi.auth.PtcCredentialProvider;
 
-import POGOProtos.Networking.Envelopes.RequestEnvelopeOuterClass.RequestEnvelope.AuthInfo;
 import ch.viascom.hipchat.api.HipChat;
 import ch.viascom.hipchat.api.api.RoomsAPI;
 import ch.viascom.hipchat.api.models.message.MessageColor;
@@ -24,15 +23,14 @@ public class PokePop {
 	public static boolean login(PokeProp prop) {
 		try {
 			OkHttpClient httpClient = new OkHttpClient();
-			AuthInfo auth = new PtcLogin(httpClient).login(prop.getUsername(), prop.getPassword());
-			go = new PokemonGo(auth, httpClient);
+			go = new PokemonGo(new PtcCredentialProvider(httpClient, prop.getUsername(), prop.getPassword()),
+					httpClient);
 			return true;
 		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
 		}
 	}
-
 
 	public static void sendMessageToHipchat(String message) {
 		try {
@@ -54,7 +52,6 @@ public class PokePop {
 				// less likely to get banned this way.
 				Thread.sleep(1000 * Attempts);
 			}
-			System.out.println("Logged in as: " + go.getPlayerProfile().getUsername());
 			go.setLatitude(prop.getLat());
 			go.setLongitude(prop.getLng());
 			System.out.println("Currently located at: " + go.getLatitude() + " " + go.getLongitude());
